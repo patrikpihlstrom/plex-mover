@@ -1,0 +1,6 @@
+config.json
+*.swp
+*.swo
+*.pyc
+test/plexmediaserver
+test/transmission

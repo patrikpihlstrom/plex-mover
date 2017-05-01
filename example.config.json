@@ -1,0 +1,13 @@
+{
+	"plex": {
+		"remote": false,
+		"libraries": {
+			"movies": "/plexmediaserver/Library/Movies/",
+			"tv": "/plexmediaserver/Library/TV Shows/"
+		}
+	},
+	"transmission": {
+		"remote": false,
+		"complete": "/transmission/complete/"
+	}
+}
