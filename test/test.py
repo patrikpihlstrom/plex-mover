@@ -53,7 +53,7 @@ class TestPlexMover(unittest.TestCase):
 
 if __name__ == '__main__':
     config = None
-    with open(here+'/config.json') as config:
+    with open(here+'/dummy_config.json') as config:
         config = json.load(config)
 
     suite = unittest.TestSuite()
