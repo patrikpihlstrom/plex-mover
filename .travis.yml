@@ -1,0 +1,3 @@
+language: python
+script:
+        cd test && python test.py -v

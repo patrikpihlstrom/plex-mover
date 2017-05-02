@@ -4,6 +4,8 @@ import sys
 import os
 import json
 
+import PTN
+
 class PlexMover:
     config = None
 
@@ -20,8 +22,15 @@ class PlexMover:
         return False
 
     def get_content_in_directory(self, directory):
-        return False
+        content = []
+        for item in os.listdir(directory):
+            content.append(PTN.parse(item))
+
+        return content
+
+def main():
+    plex_mover = PlexMover()
 
 if __name__ == '__main__':
-    plex_mover = PlexMover()
+    main()
 

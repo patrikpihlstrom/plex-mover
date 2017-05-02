@@ -12,7 +12,7 @@
 	},
 	"tests": [
 		{
-			"dirs": ["some.show.s01.e01", "another show - S02E010"],
+			"dirs": ["some.show.s01.e01", "another show - s02e010"],
 			"content": [["tv", "some show", 1, 1], ["tv", "another show", 2, 10]]
 		}
 	]
