@@ -47,9 +47,10 @@ class TestPlexMover(unittest.TestCase):
         shutil.rmtree(here+complete)
 
     def test_get_content_in_directory(self):
-        content = self.test['content']
-        self.assertItemsEqual(self.plex_mover.get_content_in_directory(
-            here+self.plex_mover.config['transmission']['complete']), content)
+        content = self.test['expected_content']
+        for item in content:
+            self.assertItemsEqual(self.plex_mover.get_content_in_directory(
+                here+self.plex_mover.config['transmission']['complete']), content)
 
 if __name__ == '__main__':
     config = None

@@ -12,8 +12,8 @@
 	},
 	"tests": [
 		{
-			"dirs": ["some.show s01e01", "another show - s02e10", "From [ WWW.TORRENTING.ME ] - The.Mick.S01E01.720p.HDTV.x264-AVS"],
-			"content": [{"title": "some show", "season": 1, "episode": 1}, {"title": "another show", "season": 2, "episode": 10}]
+			"dirs": ["some show s01e01x256", "another show - s02e10", "Some_Movie.1990.1080p", "Its.Always.Sunny.in.Philadelphia.S12E01.720p.HDTV.x264-AVS"],
+			"expected_content": [{"title": "some show", "season": 1, "episode": 1}, {"title": "another show", "season": 2, "episode": 10}, {"title": "Some Movie"}, {"title": "Its Always Sunny in Philadelphia", "season": 12, "episode": 1}]
 		}
 	]
 }
