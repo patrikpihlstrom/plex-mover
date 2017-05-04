@@ -60,7 +60,5 @@ if __name__ == '__main__':
     suite = unittest.TestSuite()
     for test in config['tests']:
         suite.addTest(TestPlexMover('test_get_content_in_directory', test))
-
-    code = unittest.TextTestRunner().run(suite)
-    sys.exit(code)
+        unittest.TextTestRunner().run(suite)
 
