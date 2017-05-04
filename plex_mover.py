@@ -16,7 +16,6 @@ class PlexMover:
     def __init__(self, test_mode = False):
         if test_mode == True:
             self.config = self.parse_config(os.path.dirname(os.path.abspath(__file__)) + '/test/dummy_config.json');
-            self.test_mode = True
         else:
             self.config = self.parse_config(os.path.dirname(os.path.abspath(__file__)) + '/config.json');
 
@@ -60,6 +59,41 @@ class PlexMover:
 
 def main():
     plex_mover = PlexMover()
+    complete_dir = plex_mover.config['transmission']['complete']
+    content = plex_mover.get_content_in_directory(complete_dir)
+    choice = None
+    choices = []
+    for directory in content.iterkeys():
+        choices.append(directory)
+
+    if len(choices) == 0:
+        return
+
+    while choice == None:
+        index = 0
+        for directory in content.iterkeys():
+            print '['+str(index)+'] - '+directory
+            index = index + 1
+
+        choice = raw_input('^ select an item ^: ')
+        if len(choice) == 0:
+            choice = None
+            continue
+        elif choice == '*':
+            continue
+        else:
+            choice = int(choice)
+
+        if choice >= 0 and choice < len(choices):
+            pass
+        else:
+            choice = None
+
+    if choice == '*':
+        for key, val in content.iteritems():
+            plex_mover.move_content(key, val)
+    else:
+        plex_mover.move_content(choices[choice], content[choices[choice]])
 
 if __name__ == '__main__':
     main()
