@@ -12,8 +12,8 @@
 	},
 	"tests": [
 		{
-			"dirs": ["some.show.s01.e01", "another show - s02e010"],
-			"content": [["tv", "some show", 1, 1], ["tv", "another show", 2, 10]]
+			"dirs": ["some.show s01e01", "another show - s02e10", "From [ WWW.TORRENTING.ME ] - The.Mick.S01E01.720p.HDTV.x264-AVS"],
+			"content": [{"title": "some show", "season": 1, "episode": 1}, {"title": "another show", "season": 2, "episode": 10}]
 		}
 	]
 }

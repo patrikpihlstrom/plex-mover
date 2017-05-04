@@ -1,3 +1,3 @@
 language: python
-script:
-        cd test && python test.py -v
+install: "pip install -r requirements.txt"
+script: cd test && python test.py -v
