@@ -60,5 +60,6 @@ if __name__ == '__main__':
     for test in config['tests']:
         suite.addTest(TestPlexMover('test_get_content_in_directory', test))
 
-    unittest.TextTestRunner().run(suite)
+    code = unittest.TextTestRunner().run(suite)
+    sys.exit(code)
 
