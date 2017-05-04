@@ -47,10 +47,25 @@ class TestPlexMover(unittest.TestCase):
         shutil.rmtree(here+complete)
 
     def test_get_content_in_directory(self):
-        content = self.test['expected_content']
-        for item in content:
-            self.assertItemsEqual(self.plex_mover.get_content_in_directory(
-                here+self.plex_mover.config['transmission']['complete']), content)
+        expected_content = self.test['expected_content']
+        content = self.plex_mover.get_content_in_directory(here+self.plex_mover.config['transmission']['complete'])
+
+        for item in expected_content:
+            self.assertIn(item, content.values())
+
+    def test_move_content(self):
+        libraries = self.plex_mover.config['plex']['libraries']
+        content = self.plex_mover.get_content_in_directory(here+self.plex_mover.config['transmission']['complete'])
+
+        for directory, item in content.iteritems():
+            if 'episode' in item:
+                self.assertFalse(os.path.exists(os.getcwd()+str(libraries['tv'])+str(item['title'])+'/Season '+str(item['season'])+'/'+directory))
+                self.plex_mover.move_content(directory, item)
+                self.assertTrue(os.path.exists(os.getcwd()+str(libraries['tv'])+str(item['title'])+'/Season '+str(item['season'])+'/'+directory))
+            else:
+                self.assertFalse(os.path.exists(os.getcwd()+str(libraries['movies'])+directory))
+                self.plex_mover.move_content(directory, item)
+                self.assertTrue(os.path.exists(os.getcwd()+str(libraries['movies'])+directory))
 
 if __name__ == '__main__':
     config = None
@@ -60,5 +75,7 @@ if __name__ == '__main__':
     suite = unittest.TestSuite()
     for test in config['tests']:
         suite.addTest(TestPlexMover('test_get_content_in_directory', test))
-        unittest.TextTestRunner().run(suite)
+        suite.addTest(TestPlexMover('test_move_content', test))
+
+    unittest.TextTestRunner().run(suite)
 
