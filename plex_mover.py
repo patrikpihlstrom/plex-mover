@@ -16,6 +16,7 @@ class PlexMover:
     def __init__(self, test_mode = False):
         if test_mode == True:
             self.config = self.parse_config(os.path.dirname(os.path.abspath(__file__)) + '/test/dummy_config.json');
+            self.test_mode = True
         else:
             self.config = self.parse_config(os.path.dirname(os.path.abspath(__file__)) + '/config.json');
 
