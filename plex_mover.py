@@ -15,6 +15,7 @@ class PlexMover:
 
     def __init__(self, test_mode = False):
         if test_mode == True:
+            self.test_mode = True
             self.config = self.parse_config(os.path.dirname(os.path.abspath(__file__)) + '/test/dummy_config.json');
         else:
             self.config = self.parse_config(os.path.dirname(os.path.abspath(__file__)) + '/config.json');
@@ -53,9 +54,11 @@ class PlexMover:
 
         # is this cheating?
         if self.test_mode:
-            shutil.move(os.getcwd()+_src, os.getcwd()+dest)
-        else:
-            shutil.move(_src, dest)
+            _src = os.getcwd()+_src
+            dest = os.getcwd()+dest
+
+        print _src + ' => ' + dest
+        shutil.move(_src, dest)
 
 def main():
     plex_mover = PlexMover()
@@ -70,10 +73,8 @@ def main():
         return
 
     while choice == None:
-        index = 0
         for directory in content.iterkeys():
-            print '['+str(index)+'] - '+directory
-            index = index + 1
+            print '['+str(content.keys().index(directory))+'] - '+directory
 
         choice = raw_input('^ select an item ^: ')
         if len(choice) == 0:

@@ -1,4 +1,4 @@
 #!/bin/bash
 
-python test/test.py -v
+cd test && python test.py -v
 
