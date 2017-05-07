@@ -3,7 +3,8 @@
 
 # Features
 
-Scans your transmission directory for content & automagically moves them to their respective plex directories.
+Scans your transmission directory for content & automagically moves said content its correct plex directory.
+It takes the title, season and episode into account when moving content.
 
 # Usage
 
@@ -23,5 +24,7 @@ $ python plex_mover.py
 You can enter a number, or '\*' in order to move all items.
 
 If I were to select 0, Its.Always.Sunny.In.Philadelphia.S05E02.BDRip would be moved to:
- /your/tv/lib/Its\ Always\ Sunny\ in\ Philadelphia/Season\ 5/Its.Always.Sunny.In.Philadelphia.S05E02.BDRip
+```
+/your/tv/lib/Its\ Always\ Sunny\ in\ Philadelphia/Season\ 5/Its.Always.Sunny.In.Philadelphia.S05E02.BDRip
+```
 
