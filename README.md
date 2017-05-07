@@ -28,3 +28,4 @@ If I were to select 0, Its.Always.Sunny.In.Philadelphia.S05E02.BDRip would be mo
 /your/tv/lib/Its\ Always\ Sunny\ in\ Philadelphia/Season\ 5/Its.Always.Sunny.In.Philadelphia.S05E02.BDRip
 ```
 
+From there, plex can parse the file/directory name and add it to your library.
