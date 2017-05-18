@@ -12,5 +12,8 @@ setup(
     version='1.0',
     url='https://github.com/patrikpihlstrom/plex-mover',
     description='Extract media information from torrent-like filename',
-    packages=['plex_mover']
+    packages=['plex_mover'],
+    package_data={
+        '': ['config.json']
+    }
 )

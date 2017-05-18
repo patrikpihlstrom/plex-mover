@@ -6,11 +6,19 @@
 Scans your transmission directory for content & automagically moves said content its correct plex directory.
 It takes the title, season and episode into account when moving content.
 
-# Usage
+# Installation
 
-Copy example.config.json to config.json and edit it as needed.
-Note that remote support is currently not available.
-Once you've got your directories set, you can run the script:
+Clone the repository using the --recursive option:
+```
+$ git clone --recursive git@github.com:patrikpihlstrom/plex-mover.git
+```
+
+Install it:
+```
+$ cd plex-mover/ && pip install .
+```
+
+# Usage
 
 ```
 $ python plex_mover.py
@@ -18,7 +26,8 @@ $ python plex_mover.py
 [1] - Some_Movie.1990.1080p
 [2] - another show - s02e10
 [3] - some show s01e01x256
-^ select an item ^: 
+################
+select an item : 
 ```
 
 You can enter a number, or '\*' in order to move all items.

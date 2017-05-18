@@ -14,13 +14,13 @@ class PlexMover:
     config = None
     test_mode = False
 
-    def __init__(self, config = expanduser('~/.plex_mover/config.json'), test_mode = False):
+    def __init__(self, test_mode = False):
         here = os.path.dirname(os.path.abspath(__file__))
         if test_mode == True:
             self.test_mode = True
-            self.config = self.parse_config(here + '/../test/dummy_config.json');
-        elif os.path.exists(config):
-            self.config = self.parse_config(config);
+            self.config = self.parse_config(os.getcwd() + '/dummy_config.json');
+        elif os.path.exists(here + '/config.json'):
+            self.config = self.parse_config(here + '/config.json');
         else:
             raise ValueError('No configuration file found.')
 
@@ -85,7 +85,8 @@ def main():
         for directory in content.iterkeys():
             print '['+str(content.keys().index(directory))+'] - '+directory
 
-        choice = raw_input('^ select an item ^: ')
+        print '################'
+        choice = raw_input('select an item: ')
         if len(choice) == 0:
             choice = None
             continue
