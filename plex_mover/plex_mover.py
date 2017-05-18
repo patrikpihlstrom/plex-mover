@@ -57,17 +57,22 @@ class PlexMover:
         movies_dir = self.config['plex']['libraries']['movies']
         _src = str(complete_dir+src)
         if 'episode' in content:
-            dest = tv_dir+str(content['title'])+'/Season '+str(content['season'])+'/'+src
+            dest = tv_dir+str(content['title'])+'/Season '+str(content['season'])+'/Episode '+str(content['episode'])+'/'+str(content['title'])+'.s'+str(content['season'])+'.e'+str(content['episode'])
         else:
-            dest = movies_dir+src
+            dest = movies_dir+content['title']
+
+        if not os.path.isdir(_src):
+            file_path, extension = os.path.splitext(_src)
+            dest += extension
 
         # is this cheating?
         if self.test_mode:
             _src = os.getcwd()+_src
             dest = os.getcwd()+dest
 
-        #print _src + ' => ' + dest
+        print _src + ' => ' + dest
         shutil.move(_src, dest)
+        return dest
 
 def main():
     plex_mover = PlexMover()
