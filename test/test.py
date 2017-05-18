@@ -7,7 +7,7 @@ import json
 import shutil
 
 here = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(here+'/../')
+sys.path.append(here+'/../plex_mover/')
 import plex_mover
 
 
@@ -51,6 +51,8 @@ class TestPlexMover(unittest.TestCase):
         content = self.plex_mover.get_content_in_directory(here+self.plex_mover.config['transmission']['complete'])
 
         for item in expected_content:
+            print(str(item) + ' ## ' + str(content.values()))
+            print('#####################################')
             self.assertIn(item, content.values())
 
     def test_move_content(self):

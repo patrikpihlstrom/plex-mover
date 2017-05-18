@@ -1,0 +1,3 @@
+[submodule "parse-torrent-name"]
+	path = parse-torrent-name
+	url = git@github.com:patrikpihlstrom/parse-torrent-name.git

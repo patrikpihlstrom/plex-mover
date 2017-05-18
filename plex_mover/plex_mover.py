@@ -6,6 +6,7 @@ import json
 import sys
 import shutil
 from itertools import ifilterfalse
+from os.path import expanduser
 
 import PTN
 
@@ -13,12 +14,15 @@ class PlexMover:
     config = None
     test_mode = False
 
-    def __init__(self, test_mode = False):
+    def __init__(self, config = expanduser('~/.plex_mover/config.json'), test_mode = False):
+        here = os.path.dirname(os.path.abspath(__file__))
         if test_mode == True:
             self.test_mode = True
-            self.config = self.parse_config(os.path.dirname(os.path.abspath(__file__)) + '/test/dummy_config.json');
+            self.config = self.parse_config(here + '/../test/dummy_config.json');
+        elif os.path.exists(config):
+            self.config = self.parse_config(config);
         else:
-            self.config = self.parse_config(os.path.dirname(os.path.abspath(__file__)) + '/config.json');
+            raise ValueError('No configuration file found.')
 
     def parse_config(self, file):
         with open(file) as config:
@@ -29,6 +33,7 @@ class PlexMover:
     def get_content_in_directory(self, directory):
         content = {}
         keys = ['title', 'season', 'episode']
+        filters = ['www.torrenting.com - ']
         for item in os.listdir(directory):
             parsed = PTN.parse(item)
 
@@ -36,6 +41,10 @@ class PlexMover:
             for key in list(parsed):
                 if key not in keys:
                     del parsed[key]
+                else:
+                    for f in filters:
+                        if f in str(parsed[key]):
+                            parsed[key] = parsed[key].replace(f, '')
 
             if len(parsed) > 0:
                 content[item] = parsed
@@ -57,7 +66,7 @@ class PlexMover:
             _src = os.getcwd()+_src
             dest = os.getcwd()+dest
 
-        print _src + ' => ' + dest
+        #print _src + ' => ' + dest
         shutil.move(_src, dest)
 
 def main():
