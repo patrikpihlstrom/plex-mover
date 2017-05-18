@@ -57,7 +57,7 @@ class PlexMover:
         movies_dir = self.config['plex']['libraries']['movies']
         _src = str(complete_dir+src)
         if 'episode' in content:
-            dest = tv_dir+str(content['title'])+'/Season '+str(content['season'])+'/Episode '+str(content['episode'])
+            dest = tv_dir+str(content['title'])+'/Season '+str(content['season'])+'/Episode '+str(content['episode'])+'/'+str(content['title'])+'.s'+str(content['season'])+'.e'+str(content['episode'])
         else:
             dest = movies_dir+content['title']
 
