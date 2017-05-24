@@ -5,11 +5,13 @@ import os
 import unittest
 import json
 import shutil
+import time
+import daemon
+from multiprocessing import Process
 
 here = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(here+'/../plex_mover/')
 import plex_mover
-
 
 class TestPlexMover(unittest.TestCase):
     test = None
@@ -17,7 +19,7 @@ class TestPlexMover(unittest.TestCase):
 
     def __init__(self, function, test):
         super(TestPlexMover, self).__init__(function)
-        self.plex_mover = plex_mover.PlexMover(test_mode=True)
+        self.plex_mover = plex_mover.PlexMover(test_mode = True)
         self.test = test
 
     def setUp(self):
@@ -51,8 +53,6 @@ class TestPlexMover(unittest.TestCase):
         content = self.plex_mover.get_content_in_directory(here+self.plex_mover.config['transmission']['complete'])
 
         for item in expected_content:
-            #print(str(item) + ' ## ' + str(content.values()))
-            #print('#####################################')
             self.assertIn(item, content.values())
 
     def test_move_content(self):
@@ -69,6 +69,59 @@ class TestPlexMover(unittest.TestCase):
                 dest = self.plex_mover.move_content(directory, item)
                 self.assertTrue(os.path.exists(dest))
 
+class TestPlexMoverDaemon(unittest.TestCase):
+    test = None
+    plex_mover = None
+    libraries = None
+    complete = None
+    incomplete = None
+    process = None
+
+    def __init__(self, function, test):
+        super(TestPlexMoverDaemon, self).__init__(function)
+
+        self.test = test
+        self.daemon = plex_mover.PlexMoverDaemon(test_mode = True)
+        self.plex_mover = self.daemon.plex_mover
+        self.libraries = self.plex_mover.config['plex']['libraries']
+        self.complete = self.plex_mover.config['transmission']['complete']
+        self.incomplete = self.plex_mover.config['transmission']['incomplete']
+        self.process = Process(target=self.daemon.run)
+        self.process.start()
+
+    def setUp(self):
+        # plex lib dirs
+        if not os.path.exists(here+self.libraries['movies']):
+            os.makedirs(here+self.libraries['movies'])
+        if not os.path.exists(here+self.libraries['tv']):
+            os.makedirs(here+self.libraries['tv'])
+
+        # transmission complete dir
+        if not os.path.exists(here+self.complete):
+            os.makedirs(here+self.complete)
+        if not os.path.exists(here+self.incomplete):
+            os.makedirs(here+self.incomplete)
+
+    def tearDown(self):
+        libraries = self.plex_mover.config['plex']['libraries']
+        complete = self.plex_mover.config['transmission']['complete']
+        shutil.rmtree(here+self.libraries['movies'])
+        shutil.rmtree(here+self.libraries['tv'])
+        shutil.rmtree(here+self.complete)
+        self.process.join()
+
+    def test_observe_directory(self):
+        # test dirs
+        for index, directory in enumerate(self.test['dirs']):
+            paths = self.plex_mover.get_source_destination(here+self.complete+directory, self.test['expected_content'][index])
+            self.assertFalse(os.path.exists(here+self.complete+directory))
+            os.makedirs(here+self.complete+directory)
+            self.assertTrue(os.path.exists(here+self.complete+directory))
+            time.sleep(3)
+            self.assertFalse(os.path.exists(here+self.complete+directory))
+            print str(paths)
+            self.assertTrue(os.path.exists(paths[1]))
+
 if __name__ == '__main__':
     config = None
     with open(here+'/dummy_config.json') as config:
@@ -76,8 +129,11 @@ if __name__ == '__main__':
 
     suite = unittest.TestSuite()
     for test in config['tests']:
-        suite.addTest(TestPlexMover('test_get_content_in_directory', test))
-        suite.addTest(TestPlexMover('test_move_content', test))
+        if 'daemon' in test and test['daemon'] == True:
+            suite.addTest(TestPlexMoverDaemon('test_observe_directory', test))
+        #else:
+        #    suite.addTest(TestPlexMover('test_get_content_in_directory', test))
+        #    suite.addTest(TestPlexMover('test_move_content', test))
 
     unittest.TextTestRunner().run(suite)
 

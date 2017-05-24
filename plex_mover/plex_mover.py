@@ -5,8 +5,12 @@ import os
 import json
 import sys
 import shutil
+import time
 from itertools import ifilterfalse
 from os.path import expanduser
+from multiprocessing import Process
+
+import daemon
 
 import PTN
 from tvnamer.utils import FileParser, EpisodeInfo, DatedEpisodeInfo, NoSeasonEpisodeInfo
@@ -14,15 +18,16 @@ from tvnamer.tvnamer_exceptions import (InvalidPath, InvalidFilename,
 ShowNotFound, DataRetrievalError, SeasonNotFound, EpisodeNotFound,
 EpisodeNameNotFound, ConfigValueError, UserAbort)
 
+__metaclass__ = type
 class PlexMover:
     config = None
     test_mode = False
     fetched_titles = {}
 
     def __init__(self, test_mode = False):
+        self.test_mode = test_mode
         here = os.path.dirname(os.path.abspath(__file__))
         if test_mode == True:
-            self.test_mode = True
             self.config = self.parse_config(os.getcwd() + '/dummy_config.json');
         elif os.path.exists(here + '/config.json'):
             self.config = self.parse_config(here + '/config.json');
@@ -69,10 +74,7 @@ class PlexMover:
 
         return content
 
-    def move_content(self, src, content):
-        if 'fetched_title' not in content:
-            content['fetched_title'] = content['title']
-
+    def get_source_destination(self, src, content):
         directories ={
             'complete': self.config['transmission']['complete'],
             'tv': self.config['plex']['libraries']['tv'],
@@ -85,7 +87,7 @@ class PlexMover:
             if content['title'] in self.fetched_titles:
                 dest = directories['tv']+content['title']+'/Season '+str(content['season'])+'/'+self.fetched_titles[content['title']]
             else:
-                dest = directories['tv']+content['title']+'/Season '+str(content['season'])+'/'+content['fetched_title']
+                dest = directories['tv']+content['title']+'/Season '+str(content['season'])+'/'+content['title']
         else:
             if content['title'] in self.fetched_titles:
                 dest = directories['movies']+self.fetched_titles[content['title']]
@@ -100,15 +102,43 @@ class PlexMover:
             _src = os.getcwd()+_src
             dest = os.getcwd()+dest
 
-        print _src + ' => ' + dest
-        shutil.move(_src, dest)
-        return dest
+        return (_src, dest)
 
-def main():
-    plex_mover = PlexMover()
+    def move_content(self, src, content):
+        directories = self.get_source_destination(src, content)
+        print directories[0] + ' => ' + directories[1]
+        shutil.move(directories[0], directories[1])
+        return directories
+
+class PlexMoverDaemon(Process):
+    plex_mover = None
+
+    def __init__(self, test_mode = False):
+        self.plex_mover = PlexMover(test_mode)
+        super(PlexMoverDaemon, self).__init__()
+
+    def run(self):
+        while True:
+            complete_dir = self.plex_mover.config['transmission']['complete']
+            if os.path.exists(complete_dir):
+                content = self.plex_mover.get_content_in_directory(complete_dir)
+                for key, val in content.iteritems():
+                    self.plex_mover.move_content(key, val)
+
+            time.sleep(1)
+
+def main(test_mode = False, daemonize = False):
+    if daemonize:
+        plex_mover = PlexMoverDaemon(test_mode)
+        with daemon.DaemonContext():
+            plex_mover.observe_directory()
+
+        pass
+
+    plex_mover = plexmover(test_mode)
     complete_dir = plex_mover.config['transmission']['complete']
     content = plex_mover.get_content_in_directory(complete_dir)
-    choice = None
+    choice = none
     choices = []
     for directory in content.iterkeys():
         choices.append(directory)
@@ -116,14 +146,14 @@ def main():
     if len(choices) == 0:
         return
 
-    while choice == None:
+    while choice == none:
         for directory in content.iterkeys():
             print '['+str(content.keys().index(directory))+'] - '+directory
 
         print '################'
         choice = raw_input('select an item: ')
         if len(choice) == 0:
-            choice = None
+            choice = none
             continue
         elif choice == '*':
             continue
@@ -133,7 +163,7 @@ def main():
         if choice >= 0 and choice < len(choices):
             pass
         else:
-            choice = None
+            choice = none
 
     if choice == '*':
         for key, val in content.iteritems():
@@ -142,4 +172,5 @@ def main():
         plex_mover.move_content(choices[choice], content[choices[choice]])
 
 if __name__ == '__main__':
-    main()
+    main(test_mode = False, daemonize = sys.argv[1] in ['-d', '-d', '--daemon'])
+

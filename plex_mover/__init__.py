@@ -1,4 +1,4 @@
 #!/usr/bin/env python
 
-from .plex_mover import PlexMover
+from .plex_mover import PlexMover, PlexMoverDaemon, main
 

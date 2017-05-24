@@ -8,10 +8,30 @@
 	},
 	"transmission": {
 		"remote": false,
-		"complete": "/transmission/complete/"
+		"complete": "/transmission/complete/",
+		"incomplete": "/transmission/incomplete/"
 	},
 	"tests": [
 		{
+			"dirs": [
+				"some show s01e01x256",
+				"another show - s02e10",
+				"Some_Movie.1990.1080p",
+				"Its.Always.Sunny.in.Philadelphia.S12E01.720p.HDTV.x264-AVS",
+				"www.torrenting.com - Silicon.Valley.S04E04.1080p.WEB.h264-TBS",
+				"rick.and.morty.s03e01.720p.hdtv.x264-w4f.mkv"
+			],
+			"expected_content": [
+				{"title": "some show", "season": 1, "episode": 1},
+				{"title": "another show", "season": 2, "episode": 10},
+				{"title": "Some Movie"},
+				{"title": "Its Always Sunny in Philadelphia", "season": 12, "episode": 1},
+				{"title": "Silicon Valley", "season": 4, "episode": 4},
+				{"title": "rick and morty", "season": 3, "episode": 1}
+			]
+		},
+		{
+			"daemon": true,
 			"dirs": [
 				"some show s01e01x256",
 				"another show - s02e10",
