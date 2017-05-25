@@ -105,9 +105,16 @@ class PlexMover:
 
         return (_src, dest)
 
-    def move_content(self, src, content):
+    def move_content(self, src, content, verbose = False):
         directories = self.get_source_destination(src, content)
-        print directories[0] + ' => ' + directories[1]
+
+        dest = directories[1].rsplit('/', 1)[0]
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+
+        if verbose:
+            print directories[0] + ' => ' + directories[1]
+
         shutil.move(directories[0], directories[1])
         return directories
 
@@ -174,9 +181,9 @@ def main(test_mode = False, daemon = False):
 
         if choice == '*':
             for key, val in content.iteritems():
-                plex_mover.move_content(key, val)
+                plex_mover.move_content(key, val, True)
         else:
-            plex_mover.move_content(choices[choice], content[choices[choice]])
+            plex_mover.move_content(choices[choice], content[choices[choice]], True)
 
 if __name__ == '__main__':
     daemon = False
