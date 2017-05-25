@@ -58,16 +58,17 @@ class TestPlexMover(unittest.TestCase):
     def test_move_content(self):
         libraries = self.plex_mover.config['plex']['libraries']
         content = self.plex_mover.get_content_in_directory(here+self.plex_mover.config['transmission']['complete'])
+        print str(content)
 
         for directory, item in content.iteritems():
             if 'episode' in item:
                 self.assertFalse(os.path.exists(os.getcwd()+str(libraries['tv'])+str(item['title'])+'/Season '+str(item['season'])+'/'+directory))
-                dest = self.plex_mover.move_content(directory, item)
-                self.assertTrue(os.path.exists(dest))
+                dirs = self.plex_mover.move_content(directory, item)
+                self.assertTrue(os.path.exists(dirs[1]))
             else:
                 self.assertFalse(os.path.exists(os.getcwd()+str(libraries['movies'])+directory))
-                dest = self.plex_mover.move_content(directory, item)
-                self.assertTrue(os.path.exists(dest))
+                dirs = self.plex_mover.move_content(directory, item)
+                self.assertTrue(os.path.exists(dirs[1]))
 
 class TestPlexMoverDaemon(unittest.TestCase):
     test = None
@@ -105,22 +106,25 @@ class TestPlexMoverDaemon(unittest.TestCase):
     def tearDown(self):
         libraries = self.plex_mover.config['plex']['libraries']
         complete = self.plex_mover.config['transmission']['complete']
+        incomplete = self.plex_mover.config['transmission']['incomplete']
         shutil.rmtree(here+self.libraries['movies'])
         shutil.rmtree(here+self.libraries['tv'])
         shutil.rmtree(here+self.complete)
-        self.process.join()
+        shutil.rmtree(here+self.incomplete)
 
     def test_observe_directory(self):
         # test dirs
         for index, directory in enumerate(self.test['dirs']):
-            paths = self.plex_mover.get_source_destination(here+self.complete+directory, self.test['expected_content'][index])
+            os.makedirs(here+self.incomplete+directory)
+            self.plex_mover.get_content_in_directory(here+self.incomplete)
+            paths = self.plex_mover.get_source_destination(directory, self.test['expected_content'][index])
             self.assertFalse(os.path.exists(here+self.complete+directory))
             os.makedirs(here+self.complete+directory)
-            self.assertTrue(os.path.exists(here+self.complete+directory))
-            time.sleep(3)
+            time.sleep(0.25)
             self.assertFalse(os.path.exists(here+self.complete+directory))
-            print str(paths)
             self.assertTrue(os.path.exists(paths[1]))
+
+        self.process.terminate()
 
 if __name__ == '__main__':
     config = None
@@ -128,12 +132,14 @@ if __name__ == '__main__':
         config = json.load(config)
 
     suite = unittest.TestSuite()
+    daemon_suite = unittest.TestSuite()
     for test in config['tests']:
         if 'daemon' in test and test['daemon'] == True:
-            suite.addTest(TestPlexMoverDaemon('test_observe_directory', test))
-        #else:
-        #    suite.addTest(TestPlexMover('test_get_content_in_directory', test))
-        #    suite.addTest(TestPlexMover('test_move_content', test))
-
-    unittest.TextTestRunner().run(suite)
+            daemon_suite.addTest(TestPlexMoverDaemon('test_observe_directory', test))
+            unittest.TextTestRunner().run(daemon_suite)
+        else:
+            suite.addTest(TestPlexMover('test_get_content_in_directory', test))
+            unittest.TextTestRunner().run(suite)
+            suite.addTest(TestPlexMover('test_move_content', test))
+            unittest.TextTestRunner().run(suite)
 

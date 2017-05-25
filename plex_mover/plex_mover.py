@@ -112,27 +112,30 @@ class PlexMover:
 
 class PlexMoverDaemon(Process):
     plex_mover = None
+    test_mode = False
+    complete = None
 
     def __init__(self, test_mode = False):
-        self.plex_mover = PlexMover(test_mode)
         super(PlexMoverDaemon, self).__init__()
+        self.plex_mover = PlexMover(test_mode)
+        self.test_mode = test_mode
+        self.complete = self.plex_mover.config['transmission']['complete']
+
+        if self.test_mode:
+                self.complete = os.getcwd() + self.complete
 
     def run(self):
         while True:
-            complete_dir = self.plex_mover.config['transmission']['complete']
-            if os.path.exists(complete_dir):
-                content = self.plex_mover.get_content_in_directory(complete_dir)
+            if os.path.exists(self.complete):
+                content = self.plex_mover.get_content_in_directory(self.complete)
                 for key, val in content.iteritems():
                     self.plex_mover.move_content(key, val)
-
-            time.sleep(1)
 
 def main(test_mode = False, daemonize = False):
     if daemonize:
         plex_mover = PlexMoverDaemon(test_mode)
-        with daemon.DaemonContext():
-            plex_mover.observe_directory()
-
+        process = Process(target=plex_mover.run)
+        process.start()
         pass
 
     plex_mover = plexmover(test_mode)
