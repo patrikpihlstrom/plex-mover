@@ -9,7 +9,7 @@ with codecs.open(readme_path, mode='r', encoding='utf-8') as f:
 
 setup(
     name='plex-mover',
-    version='1.0',
+    version='1.1',
     url='https://github.com/patrikpihlstrom/plex-mover',
     description='Extract media information from torrent-like filename',
     packages=['plex_mover'],

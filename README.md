@@ -1,12 +1,12 @@
-## plex-mover
-[![Build Status](https://travis-ci.org/patrikpihlstrom/plex-mover.svg?branch=master)](https://travis-ci.org/patrikpihlstrom/plex-mover)
+# plex-mover
+[![Build Status](https://travis-ci.org/patrikpihlstrom/plex-mover.svg?branch=daemon)](https://travis-ci.org/patrikpihlstrom/plex-mover)
 
-# Features
+## Features
 
 Scans your transmission directory for content & automagically moves said content its correct plex directory.
 It takes the title, season and episode into account when moving content.
 
-# Installation
+## Installation
 
 Clone the repository using the --recursive option:
 ```
@@ -18,7 +18,7 @@ Install it:
 $ cd plex-mover/ && pip install .
 ```
 
-# Usage
+## Usage
 
 ```
 $ python plex_mover.py
@@ -38,3 +38,10 @@ If I were to select 0, Its.Always.Sunny.In.Philadelphia.S05E02.BDRip would be mo
 ```
 
 From there, plex can parse the file/directory name and add it to your library.
+
+### daemon
+
+```
+$ python plex_mover.py -d &
+```
+
