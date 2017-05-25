@@ -61,12 +61,11 @@ class TestPlexMover(unittest.TestCase):
         for directory, item in content.iteritems():
             if 'episode' in item:
                 self.assertFalse(os.path.exists(os.getcwd()+str(libraries['tv'])+str(item['title'])+'/Season '+str(item['season'])+'/'+directory))
-                dirs = self.plex_mover.move_content(directory, item)
-                self.assertTrue(os.path.exists(dirs[1]))
             else:
                 self.assertFalse(os.path.exists(os.getcwd()+str(libraries['movies'])+directory))
-                dirs = self.plex_mover.move_content(directory, item)
-                self.assertTrue(os.path.exists(dirs[1]))
+
+            dirs = self.plex_mover.move_content(directory, item, True)
+            self.assertTrue(os.path.exists(dirs[1]))
 
 class TestPlexMoverDaemon(unittest.TestCase):
     test = None
