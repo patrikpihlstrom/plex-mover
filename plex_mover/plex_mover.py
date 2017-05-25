@@ -8,7 +8,6 @@ import shutil
 import time
 from itertools import ifilterfalse
 from os.path import expanduser
-from multiprocessing import Process
 
 import PTN
 from tvnamer.utils import FileParser, EpisodeInfo, DatedEpisodeInfo, NoSeasonEpisodeInfo
@@ -111,13 +110,12 @@ class PlexMover:
         shutil.move(directories[0], directories[1])
         return directories
 
-class PlexMoverDaemon(Process):
+class PlexMoverDaemon:
     plex_mover = None
     test_mode = False
     complete = None
 
     def __init__(self, test_mode = False):
-        super(PlexMoverDaemon, self).__init__()
         self.plex_mover = PlexMover(test_mode)
         self.test_mode = test_mode
         self.complete = self.plex_mover.config['transmission']['complete']
