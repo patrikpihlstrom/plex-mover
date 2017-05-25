@@ -19,15 +19,19 @@
 				"Some_Movie.1990.1080p",
 				"Its.Always.Sunny.in.Philadelphia.S12E01.720p.HDTV.x264-AVS",
 				"www.torrenting.com - Silicon.Valley.S04E04.1080p.WEB.h264-TBS",
-				"rick.and.morty.s03e01.720p.hdtv.x264-w4f.mkv"
+				"rick.and.morty.s03e01.720p.hdtv.x264-w4f.mkv",
+				"www.Torrenting.com - American.Gods.S01E01.1080p.HEVC.x265-MeGusta",
+				"american.gods.s01e02.1080p.webrip.hevc.x265-rmteam.mkv"
 			],
 			"expected_content": [
 				{"title": "some show", "season": 1, "episode": 1},
 				{"title": "another show", "season": 2, "episode": 10},
 				{"title": "Some Movie"},
-				{"title": "Its Always Sunny in Philadelphia", "season": 12, "episode": 1},
-				{"title": "Silicon Valley", "season": 4, "episode": 4},
-				{"title": "rick and morty", "season": 3, "episode": 1}
+				{"title": "its always sunny in philadelphia", "season": 12, "episode": 1},
+				{"title": "silicon valley", "season": 4, "episode": 4},
+				{"title": "rick and morty", "season": 3, "episode": 1},
+				{"title": "american gods", "season": 1, "episode": 1},
+				{"title": "american gods", "season": 1, "episode": 2}
 			]
 		},
 		{
@@ -44,8 +48,8 @@
 				{"title": "some show", "season": 1, "episode": 1},
 				{"title": "another show", "season": 2, "episode": 10},
 				{"title": "Some Movie"},
-				{"title": "Its Always Sunny in Philadelphia", "season": 12, "episode": 1},
-				{"title": "Silicon Valley", "season": 4, "episode": 4},
+				{"title": "its always sunny in philadelphia", "season": 12, "episode": 1},
+				{"title": "silicon valley", "season": 4, "episode": 4},
 				{"title": "rick and morty", "season": 3, "episode": 1}
 			]
 		}

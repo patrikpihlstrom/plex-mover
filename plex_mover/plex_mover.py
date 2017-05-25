@@ -57,6 +57,7 @@ class PlexMover:
 
                     try:
                         if 'episode' in parsed:
+                            parsed['title'] = parsed['title'].lower()
                             fetched_title = FileParser(parsed['title']+'.S'+str(parsed['season'])+'E'+str(parsed['episode'])).parse().generateFilename()
                         else:
                             fetched_title = FileParser(parsed['title']).parse().generateFilename()
