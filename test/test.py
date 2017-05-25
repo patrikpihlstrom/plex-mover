@@ -6,7 +6,6 @@ import unittest
 import json
 import shutil
 import time
-import daemon
 from multiprocessing import Process
 
 here = os.path.dirname(os.path.abspath(__file__))
