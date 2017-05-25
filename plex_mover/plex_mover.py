@@ -131,14 +131,14 @@ class PlexMoverDaemon(Process):
                 content = self.plex_mover.get_content_in_directory(self.complete)
                 for key, val in content.iteritems():
                     self.plex_mover.move_content(key, val)
+            else:
+                print 'transmission complete dir not found'
+                return
 
 def main(test_mode = False, daemon = False):
     if daemon:
         plex_mover = PlexMoverDaemon(test_mode)
-        process = Process(target=plex_mover.run)
-        process.daemon = True
-        process.start()
-        print "PID: " + str(process.pid)
+        plex_mover.run()
     else:
         plex_mover = PlexMover(test_mode)
         complete_dir = plex_mover.config['transmission']['complete']
@@ -154,14 +154,14 @@ def main(test_mode = False, daemon = False):
         if len(choices) == 0:
             return
 
-        while choice == none:
+        while choice == None:
             for directory in content.iterkeys():
                 print '['+str(content.keys().index(directory))+'] - '+directory
 
             print '################'
             choice = raw_input('select an item: ')
             if len(choice) == 0:
-                choice = none
+                choice = None
                 continue
             elif choice == '*':
                 continue
@@ -171,7 +171,7 @@ def main(test_mode = False, daemon = False):
             if choice >= 0 and choice < len(choices):
                 pass
             else:
-                choice = none
+                choice = None
 
         if choice == '*':
             for key, val in content.iteritems():
