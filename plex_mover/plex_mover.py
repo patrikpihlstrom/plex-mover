@@ -10,8 +10,6 @@ from itertools import ifilterfalse
 from os.path import expanduser
 from multiprocessing import Process
 
-import daemon
-
 import PTN
 from tvnamer.utils import FileParser, EpisodeInfo, DatedEpisodeInfo, NoSeasonEpisodeInfo
 from tvnamer.tvnamer_exceptions import (InvalidPath, InvalidFilename,
@@ -41,6 +39,9 @@ class PlexMover:
         return False
 
     def get_content_in_directory(self, directory):
+        if not os.path.exists(directory):
+            return
+
         content = {}
         keys = ['title', 'season', 'episode']
         for item in os.listdir(directory):
@@ -131,49 +132,58 @@ class PlexMoverDaemon(Process):
                 for key, val in content.iteritems():
                     self.plex_mover.move_content(key, val)
 
-def main(test_mode = False, daemonize = False):
-    if daemonize:
+def main(test_mode = False, daemon = False):
+    if daemon:
         plex_mover = PlexMoverDaemon(test_mode)
         process = Process(target=plex_mover.run)
+        process.daemon = True
         process.start()
-        pass
-
-    plex_mover = plexmover(test_mode)
-    complete_dir = plex_mover.config['transmission']['complete']
-    content = plex_mover.get_content_in_directory(complete_dir)
-    choice = none
-    choices = []
-    for directory in content.iterkeys():
-        choices.append(directory)
-
-    if len(choices) == 0:
-        return
-
-    while choice == none:
-        for directory in content.iterkeys():
-            print '['+str(content.keys().index(directory))+'] - '+directory
-
-        print '################'
-        choice = raw_input('select an item: ')
-        if len(choice) == 0:
-            choice = none
-            continue
-        elif choice == '*':
-            continue
-        else:
-            choice = int(choice)
-
-        if choice >= 0 and choice < len(choices):
-            pass
-        else:
-            choice = none
-
-    if choice == '*':
-        for key, val in content.iteritems():
-            plex_mover.move_content(key, val)
+        print "PID: " + str(process.pid)
     else:
-        plex_mover.move_content(choices[choice], content[choices[choice]])
+        plex_mover = PlexMover(test_mode)
+        complete_dir = plex_mover.config['transmission']['complete']
+        content = plex_mover.get_content_in_directory(complete_dir)
+        if content == None:
+            return
+
+        choice = None
+        choices = []
+        for directory in content.iterkeys():
+            choices.append(directory)
+
+        if len(choices) == 0:
+            return
+
+        while choice == none:
+            for directory in content.iterkeys():
+                print '['+str(content.keys().index(directory))+'] - '+directory
+
+            print '################'
+            choice = raw_input('select an item: ')
+            if len(choice) == 0:
+                choice = none
+                continue
+            elif choice == '*':
+                continue
+            else:
+                choice = int(choice)
+
+            if choice >= 0 and choice < len(choices):
+                pass
+            else:
+                choice = none
+
+        if choice == '*':
+            for key, val in content.iteritems():
+                plex_mover.move_content(key, val)
+        else:
+            plex_mover.move_content(choices[choice], content[choices[choice]])
 
 if __name__ == '__main__':
-    main(test_mode = False, daemonize = sys.argv[1] in ['-d', '-d', '--daemon'])
+    daemon = False
+    for x in sys.argv:
+        if x in ['-d', '-D', '--daemon']:
+            daemon = True
+
+    main(False, daemon)
 

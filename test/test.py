@@ -58,7 +58,6 @@ class TestPlexMover(unittest.TestCase):
     def test_move_content(self):
         libraries = self.plex_mover.config['plex']['libraries']
         content = self.plex_mover.get_content_in_directory(here+self.plex_mover.config['transmission']['complete'])
-        print str(content)
 
         for directory, item in content.iteritems():
             if 'episode' in item:
@@ -88,7 +87,9 @@ class TestPlexMoverDaemon(unittest.TestCase):
         self.complete = self.plex_mover.config['transmission']['complete']
         self.incomplete = self.plex_mover.config['transmission']['incomplete']
         self.process = Process(target=self.daemon.run)
+        self.process.daemon = True
         self.process.start()
+        print "PID: " + str(self.process.pid)
 
     def setUp(self):
         # plex lib dirs
