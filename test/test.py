@@ -111,6 +111,7 @@ class TestPlexMoverDaemon(unittest.TestCase):
         shutil.rmtree(here+self.libraries['tv'])
         shutil.rmtree(here+self.complete)
         shutil.rmtree(here+self.incomplete)
+        self.process.terminate()
 
     def test_observe_directory(self):
         # test dirs
