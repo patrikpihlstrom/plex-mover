@@ -107,6 +107,11 @@ class PlexMover:
 
     def move_content(self, src, content):
         directories = self.get_source_destination(src, content)
+
+        dest = directories[1].rsplit('/', 1)[0]
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+
         print directories[0] + ' => ' + directories[1]
         shutil.move(directories[0], directories[1])
         return directories
