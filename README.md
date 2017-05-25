@@ -1,5 +1,5 @@
 # plex-mover
-[![Build Status](https://travis-ci.org/patrikpihlstrom/plex-mover.svg?branch=daemon)](https://travis-ci.org/patrikpihlstrom/plex-mover)
+[![Build Status](https://travis-ci.org/patrikpihlstrom/plex-mover.svg?branch=master)](https://travis-ci.org/patrikpihlstrom/plex-mover)
 
 ## Features
 
