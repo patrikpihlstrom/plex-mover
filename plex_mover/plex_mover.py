@@ -141,6 +141,8 @@ class PlexMoverDaemon:
                 print 'transmission complete dir not found'
                 return
 
+            time.sleep(0.5)
+
 def main(test_mode = False, daemon = False):
     if daemon:
         plex_mover = PlexMoverDaemon(test_mode)
