@@ -136,12 +136,12 @@ class PlexMoverDaemon:
             if os.path.exists(self.complete):
                 content = self.plex_mover.get_content_in_directory(self.complete)
                 for key, val in content.iteritems():
-                    self.plex_mover.move_content(key, val)
+                    self.plex_mover.move_content(key, val, self.test_mode)
             else:
                 print 'transmission complete dir not found'
                 return
 
-            time.sleep(0.5)
+            time.sleep(0.1)
 
 def main(test_mode = False, daemon = False):
     if daemon:

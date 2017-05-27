@@ -124,8 +124,6 @@ class TestPlexMoverDaemon(unittest.TestCase):
             self.assertFalse(os.path.exists(here+self.complete+directory))
             self.assertTrue(os.path.exists(paths[1]))
 
-        self.process.terminate()
-
 if __name__ == '__main__':
     config = None
     with open(here+'/dummy_config.json') as config:
