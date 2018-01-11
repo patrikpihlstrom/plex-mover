@@ -1,0 +1,14 @@
+{
+	"plex": {
+		"remote": false,
+		"libraries": {
+			"movies": "/Users/ppi/Projects/other/plex-mover/test/plexmediaserver/Library/Movies",
+			"tv": "/Users/ppi/Projects/other/plex-mover/test/plexmediaserver/Library/TV Shows"
+		}
+	},
+	"transmission": {
+		"remote": false,
+		"complete": "/Users/ppi/Projects/other/plex-mover/test/transmission/complete"
+	}
+}
+

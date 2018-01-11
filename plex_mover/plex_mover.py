@@ -189,9 +189,12 @@ def main(test_mode = False, daemon = False):
 
 if __name__ == '__main__':
     daemon = False
+    test = False
     for x in sys.argv:
         if x in ['-d', '-D', '--daemon']:
             daemon = True
+        if x in ['-t' '--test']:
+            test = True
 
-    main(False, daemon)
+    main(test, daemon)
 
