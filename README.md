@@ -39,9 +39,3 @@ If I were to select 0, Its.Always.Sunny.In.Philadelphia.S05E02.BDRip would be mo
 
 From there, plex can parse the file/directory name and add it to your library.
 
-### daemon
-
-```
-$ python plex_mover.py -d &
-```
-

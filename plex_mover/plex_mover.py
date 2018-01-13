@@ -8,6 +8,7 @@ import shutil
 import time
 from itertools import ifilterfalse
 from os.path import expanduser
+from pprint import pprint
 
 import PTN
 from tvnamer.utils import FileParser, EpisodeInfo, DatedEpisodeInfo, NoSeasonEpisodeInfo
@@ -69,7 +70,10 @@ class PlexMover:
                             index = fetched_title.index('].')
                             fetched_title = fetched_title[:index] + ']'
 
-                        self.fetched_titles[parsed['title']] = fetched_title
+                        if 'episode' in parsed:
+                            self.fetched_titles[parsed['title']+'.S'+str(parsed['season'])+'E'+str(parsed['episode'])] = fetched_title
+                        else:
+                            self.fetched_titles[parsed['title']] = fetched_title
 
                     content[item] = parsed
 
@@ -83,10 +87,13 @@ class PlexMover:
         }
 
         _src = str(directories['complete']+src)
+        print('fetched titles: ')
+        pprint(self.fetched_titles)
 
+        # Check if it's a tv show or a movie
         if 'episode' in content:
-            if content['title'] in self.fetched_titles:
-                dest = directories['tv']+content['title']+'/Season '+str(content['season'])+'/'+self.fetched_titles[content['title']]
+            if content['title']+'.S'+str(content['season'])+'E'+str(content['episode']) in self.fetched_titles:
+                dest = directories['tv']+content['title']+'/Season '+str(content['season'])+'/'+self.fetched_titles[content['title']+'.S'+str(content['season'])+'E'+str(content['episode'])]
             else:
                 dest = directories['tv']+content['title']+'/Season '+str(content['season'])+'/'+content['title']
         else:
@@ -95,6 +102,7 @@ class PlexMover:
             else:
                 dest = directories['movies']+content['fetched_title']
 
+        pprint(dest)
         if not os.path.isdir(_src):
             file_path, extension = os.path.splitext(_src)
             dest += extension
@@ -107,7 +115,9 @@ class PlexMover:
 
     def move_content(self, src, content, verbose = False):
         directories = self.get_source_destination(src, content)
+        pprint(directories)
 
+        # Create the 'season' dir if it doesn't exist
         dest = directories[1].rsplit('/', 1)[0]
         if not os.path.exists(dest):
             os.makedirs(dest)
@@ -118,83 +128,51 @@ class PlexMover:
         shutil.move(directories[0], directories[1])
         return directories
 
-class PlexMoverDaemon:
-    plex_mover = None
-    test_mode = False
-    complete = None
+def main(test_mode = False):
+    plex_mover = PlexMover(test_mode)
+    complete_dir = plex_mover.config['transmission']['complete']
+    content = plex_mover.get_content_in_directory(complete_dir)
+    if content == None:
+        return
 
-    def __init__(self, test_mode = False):
-        self.plex_mover = PlexMover(test_mode)
-        self.test_mode = test_mode
-        self.complete = self.plex_mover.config['transmission']['complete']
+    choice = None
+    choices = []
+    for directory in content.iterkeys():
+        choices.append(directory)
 
-        if self.test_mode:
-                self.complete = os.getcwd() + self.complete
+    if len(choices) == 0:
+        return
 
-    def run(self):
-        while True:
-            if os.path.exists(self.complete):
-                content = self.plex_mover.get_content_in_directory(self.complete)
-                for key, val in content.iteritems():
-                    self.plex_mover.move_content(key, val, self.test_mode)
-            else:
-                print 'transmission complete dir not found'
-                return
-
-            time.sleep(0.1)
-
-def main(test_mode = False, daemon = False):
-    if daemon:
-        plex_mover = PlexMoverDaemon(test_mode)
-        plex_mover.run()
-    else:
-        plex_mover = PlexMover(test_mode)
-        complete_dir = plex_mover.config['transmission']['complete']
-        content = plex_mover.get_content_in_directory(complete_dir)
-        if content == None:
-            return
-
-        choice = None
-        choices = []
+    while choice == None:
         for directory in content.iterkeys():
-            choices.append(directory)
+            print '['+str(content.keys().index(directory))+'] - '+directory
 
-        if len(choices) == 0:
-            return
-
-        while choice == None:
-            for directory in content.iterkeys():
-                print '['+str(content.keys().index(directory))+'] - '+directory
-
-            print '################'
-            choice = raw_input('select an item: ')
-            if len(choice) == 0:
-                choice = None
-                continue
-            elif choice == '*':
-                continue
-            else:
-                choice = int(choice)
-
-            if choice >= 0 and choice < len(choices):
-                pass
-            else:
-                choice = None
-
-        if choice == '*':
-            for key, val in content.iteritems():
-                plex_mover.move_content(key, val, True)
+        print '################'
+        choice = raw_input('select an item: ')
+        if len(choice) == 0:
+            choice = None
+            continue
+        elif choice == '*':
+            continue
         else:
-            plex_mover.move_content(choices[choice], content[choices[choice]], True)
+            choice = int(choice)
+
+        if choice >= 0 and choice < len(choices):
+            pass
+        else:
+            choice = None
+
+    if choice == '*':
+        for key, val in content.iteritems():
+            plex_mover.move_content(key, val, True)
+    else:
+        plex_mover.move_content(choices[choice], content[choices[choice]], True)
 
 if __name__ == '__main__':
-    daemon = False
     test = False
     for x in sys.argv:
-        if x in ['-d', '-D', '--daemon']:
-            daemon = True
         if x in ['-t' '--test']:
             test = True
 
-    main(test, daemon)
+    main(test)
 

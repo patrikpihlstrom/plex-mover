@@ -14,43 +14,22 @@
 	"tests": [
 		{
 			"dirs": [
-				"some show s01e01x256",
-				"another show - s02e10",
-				"Some_Movie.1990.1080p",
-				"Its.Always.Sunny.in.Philadelphia.S12E01.720p.HDTV.x264-AVS",
-				"www.torrenting.com - Silicon.Valley.S04E04.1080p.WEB.h264-TBS",
-				"rick.and.morty.s03e01.720p.hdtv.x264-w4f.mkv",
-				"www.Torrenting.com - American.Gods.S01E01.1080p.HEVC.x265-MeGusta",
-				"american.gods.s01e02.1080p.webrip.hevc.x265-rmteam.mkv"
+				"Halt.and.Catch.Fire.S04E03.CONVERT.1080p.WEB.h264-TBS[rarbg]",
+				"Halt.and.Catch.Fire.S04E08.CONVERT.1080p.WEB.h264-TBS[rarbg]",
+				"Halt.and.Catch.Fire.S04E06.CONVERT.1080p.WEB.h264-TBS[rarbg]",
+				"Halt.and.Catch.Fire.S04E10.1080p.WEB.H264-STRiFE[rarbg]",
+				"Halt.and.Catch.Fire.S04E02.Signal.to.Noise.1080p.AMZN.WEBRip.DDP5.1.x264-NTb[rarbg]",
+				"Halt.and.Catch.Fire.S04E05.CONVERT.1080p.WEB.h264-TBS[rarbg]",
+				"Halt.and.Catch.Fire.S04E07.CONVERT.1080p.WEB.h264-TBS[rarbg]"
 			],
 			"expected_content": [
-				{"title": "some show", "season": 1, "episode": 1},
-				{"title": "another show", "season": 2, "episode": 10},
-				{"title": "Some Movie"},
-				{"title": "its always sunny in philadelphia", "season": 12, "episode": 1},
-				{"title": "silicon valley", "season": 4, "episode": 4},
-				{"title": "rick and morty", "season": 3, "episode": 1},
-				{"title": "american gods", "season": 1, "episode": 1},
-				{"title": "american gods", "season": 1, "episode": 2}
-			]
-		},
-		{
-			"daemon": true,
-			"dirs": [
-				"some show s01e01x256",
-				"another show - s02e10",
-				"Some_Movie.1990.1080p",
-				"Its.Always.Sunny.in.Philadelphia.S12E01.720p.HDTV.x264-AVS",
-				"www.torrenting.com - Silicon.Valley.S04E04.1080p.WEB.h264-TBS",
-				"rick.and.morty.s03e01.720p.hdtv.x264-w4f.mkv"
-			],
-			"expected_content": [
-				{"title": "some show", "season": 1, "episode": 1},
-				{"title": "another show", "season": 2, "episode": 10},
-				{"title": "Some Movie"},
-				{"title": "its always sunny in philadelphia", "season": 12, "episode": 1},
-				{"title": "silicon valley", "season": 4, "episode": 4},
-				{"title": "rick and morty", "season": 3, "episode": 1}
+				{"title": "halt and catch fire", "season": 4, "episode": 3},
+				{"title": "halt and catch fire", "season": 4, "episode": 8},
+				{"title": "halt and catch fire", "season": 4, "episode": 6},
+				{"title": "halt and catch fire", "season": 4, "episode": 10},
+				{"title": "halt and catch fire", "season": 4, "episode": 2},
+				{"title": "halt and catch fire", "season": 4, "episode": 5},
+				{"title": "halt and catch fire", "season": 4, "episode": 7}
 			]
 		}
 	]
