@@ -87,8 +87,6 @@ class PlexMover:
         }
 
         _src = str(directories['complete']+src)
-        print('fetched titles: ')
-        pprint(self.fetched_titles)
 
         # Check if it's a tv show or a movie
         if 'episode' in content:
@@ -102,7 +100,6 @@ class PlexMover:
             else:
                 dest = directories['movies']+content['fetched_title']
 
-        pprint(dest)
         if not os.path.isdir(_src):
             file_path, extension = os.path.splitext(_src)
             dest += extension
@@ -115,7 +112,6 @@ class PlexMover:
 
     def move_content(self, src, content, verbose = False):
         directories = self.get_source_destination(src, content)
-        pprint(directories)
 
         # Create the 'season' dir if it doesn't exist
         dest = directories[1].rsplit('/', 1)[0]
